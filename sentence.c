@@ -7,8 +7,8 @@ int	equalSentence(t_sentence *first, t_sentence *second)
 
 	while (first && second)
 	{
-		len = strlen(first);
-		if (len != strlen(second))
+		len = strlen(first->word);
+		if (len != strlen(second->word))
 			return (0);
 		i = 0;
 		while (i < len)
@@ -25,7 +25,7 @@ int	equalSentence(t_sentence *first, t_sentence *second)
 	return (1);	
 }
 
-void	cleanerSentence(t_sentence **sentence, t_sentence *cursor)
+void	cleanerSentence(t_sentence **sentence, t_sentence **cursor)
 {
 	t_sentence	*tmp;
 	t_sentence	*list;
@@ -42,7 +42,7 @@ void	cleanerSentence(t_sentence **sentence, t_sentence *cursor)
 			list = tmp;
 		}
 		*sentence = NULL;
-		cursor = *sentence;
+		*cursor = *sentence;
 	}
 	else
 	{
@@ -58,7 +58,7 @@ void	emptySentence(t_sentence **sentence)
 		printf("List not clear\n");
 }
 
-void	cursorToStart(t_sentence **sentence, t_sentence **cursor)
+static void	cursorToStart(t_sentence **sentence, t_sentence **cursor)
 {
 	if(*sentence)
 	{
@@ -70,7 +70,7 @@ void	cursorToStart(t_sentence **sentence, t_sentence **cursor)
 	}
 }
 
-void	cursorInStart(t_sentence **sentence, t_sentence *cursor)
+static void	cursorInStart(t_sentence **sentence, t_sentence *cursor)
 {
 	if(*sentence)
 	{
@@ -85,7 +85,7 @@ void	cursorInStart(t_sentence **sentence, t_sentence *cursor)
 	}
 }
 
-t_sentence	*lastWord(t_sentence *lst)
+static t_sentence	*lastWord(t_sentence *lst)
 {
 	while (lst)
 	{
@@ -96,7 +96,7 @@ t_sentence	*lastWord(t_sentence *lst)
 	return (lst);
 }
 
-void cursorToEnd(t_sentence **sentence, t_sentence **cursor)
+static void cursorToEnd(t_sentence **sentence, t_sentence **cursor)
 {
 	
 	if (*sentence)
@@ -109,7 +109,7 @@ void cursorToEnd(t_sentence **sentence, t_sentence **cursor)
 	}
 }
 
-void cursorInEnd(t_sentence **sentence, t_sentence *cursor)
+static void cursorInEnd(t_sentence **sentence, t_sentence *cursor)
 {
 	if (*sentence)
 	{
@@ -124,7 +124,7 @@ void cursorInEnd(t_sentence **sentence, t_sentence *cursor)
 	}
 }
 
-void	nextEl(t_sentence **sentence, t_sentence **cursor)
+static void	nextEl(t_sentence **sentence, t_sentence **cursor)
 {
 	if (*sentence)
 	{
@@ -139,9 +139,9 @@ void	nextEl(t_sentence **sentence, t_sentence **cursor)
 	}
 }
 
-void	viewNextEl(t_sentence **sentence, t_sentence *cursor)
+static void	viewNextEl(t_sentence **sentence, t_sentence *cursor)
 {
-	if (sentence)
+	if (*sentence)
 	{
 		if (cursor->next)
 			printf("%s\n", cursor->next->word);
@@ -154,7 +154,7 @@ void	viewNextEl(t_sentence **sentence, t_sentence *cursor)
 	}
 }
 
-void	deleteNextEl(t_sentence **sentence, t_sentence *cursor)
+static void	deleteNextEl(t_sentence **sentence, t_sentence *cursor)
 {
 	t_sentence	*temp;
 
@@ -183,7 +183,7 @@ void	deleteNextEl(t_sentence **sentence, t_sentence *cursor)
 	}
 }
 
-void	takeEl(t_sentence **sentence, t_sentence *cursor, t_sentence **taked)
+static void	takeEl(t_sentence **sentence, t_sentence *cursor, t_sentence **taked)
 {
 	if ((*taked))
 	{
@@ -217,7 +217,7 @@ void	takeEl(t_sentence **sentence, t_sentence *cursor, t_sentence **taked)
 	}
 }
 
-void	changeNextEl(t_sentence **sentence, t_sentence *cursor)
+static void	changeNextEl(t_sentence **sentence, t_sentence *cursor)
 {
 	if (*sentence)
 	{
@@ -259,7 +259,7 @@ t_sentence	*newSentence(char *word)
 	return (ret);
 }
 
-void	addEl(t_sentence **sentence, t_sentence **cursor)
+static void	addEl(t_sentence **sentence, t_sentence **cursor)
 {
 	t_sentence	*temp;
 	char		buf[100];
@@ -334,7 +334,7 @@ void	sentenceMenu(t_sentence	**sentence)
 		switch (flag)
 		{
 		case 1:
-			cleanerSentence(sentence, cursor);
+			cleanerSentence(sentence, &cursor);
 			break;
 		case 2:
 			emptySentence(sentence);

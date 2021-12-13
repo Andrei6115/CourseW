@@ -9,4 +9,6 @@ typedef struct s_sentence
 } t_sentence;
 
 void	sentenceMenu(t_sentence	**sentence);
+void	cleanerSentence(t_sentence **sentence, t_sentence **cursor);
+void	printSentence(t_sentence **sentence, t_sentence *cursor);
 #endif
