@@ -1,4 +1,30 @@
 #include "sentence.h"
+int	equalSentence(t_sentence *first, t_sentence *second)
+{
+	int i;
+	int	len;
+
+
+	while (first && second)
+	{
+		len = strlen(first);
+		if (len != strlen(second))
+			return (0);
+		i = 0;
+		while (i < len)
+		{
+			if (first->word[i] != second->word[i])
+				return (0);
+			i++;
+		}
+		first = first->next;
+		second = second->next;
+	}
+	if (first != second)
+		return (0);
+	return (1);	
+}
+
 void	cleanerSentence(t_sentence **sentence, t_sentence *cursor)
 {
 	t_sentence	*tmp;
