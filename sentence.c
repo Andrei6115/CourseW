@@ -27,16 +27,16 @@ void	cleanerSentence(t_sentence **sentence, t_sentence *cursor)
 void	emptySentence(t_sentence **sentence)
 {
 	if (*sentence == NULL)
-		printf("List empty\n");
+		printf("List clear\n");
 	else
-		printf("List not empty\n");
+		printf("List not clear\n");
 }
 
-void	cursorToStart(t_sentence **sentence, t_sentence *cursor)
+void	cursorToStart(t_sentence **sentence, t_sentence **cursor)
 {
 	if(*sentence)
 	{
-		cursor = *sentence;
+		*cursor = *sentence;
 	}
 	else
 	{
@@ -70,11 +70,12 @@ t_sentence	*lastWord(t_sentence *lst)
 	return (lst);
 }
 
-void cursorToEnd(t_sentence **sentence, t_sentence *cursor)
+void cursorToEnd(t_sentence **sentence, t_sentence **cursor)
 {
+	
 	if (*sentence)
 	{
-		cursor = lastWord(*sentence);
+		*cursor = lastWord(*sentence);
 	}
 	else
 	{
@@ -84,12 +85,9 @@ void cursorToEnd(t_sentence **sentence, t_sentence *cursor)
 
 void cursorInEnd(t_sentence **sentence, t_sentence *cursor)
 {
-	t_sentence	*last;
-
 	if (*sentence)
 	{
-		last = lastWord(*sentence);
-		if (cursor == sentence)
+		if (!cursor->next)
 			printf("Cursor in end\n");
 		else
 			printf("Cursor not in end\n");
@@ -100,12 +98,12 @@ void cursorInEnd(t_sentence **sentence, t_sentence *cursor)
 	}
 }
 
-void	nextEl(t_sentence **sentence, t_sentence *cursor)
+void	nextEl(t_sentence **sentence, t_sentence **cursor)
 {
 	if (*sentence)
 	{
-		if (cursor->next)
-			cursor = cursor->next;
+		if ((*cursor)->next)
+			*cursor = (*cursor)->next;
 		else
 			printf("No el\n");
 	}
@@ -120,7 +118,7 @@ void	viewNextEl(t_sentence **sentence, t_sentence *cursor)
 	if (sentence)
 	{
 		if (cursor->next)
-			printf("%s", cursor->next->word);
+			printf("%s\n", cursor->next->word);
 		else
 			printf("No el\n");
 	}
@@ -235,37 +233,34 @@ t_sentence	*newSentence(char *word)
 	return (ret);
 }
 
-void	addEl(t_sentence **sentence, t_sentence *cursor)
+void	addEl(t_sentence **sentence, t_sentence **cursor)
 {
 	t_sentence	*temp;
 	char		buf[100];
-	
-	if(*sentence)
-	{
-		printf("Enter data for el:");
-		scanf("%s", buf);
-		printf("\n");
 
-	
-		temp = newSentence(buf);
-		if (!*sentence)
-			*sentence = temp;
-		else
-		{
-			if (cursor->next)
-			{
-				temp->next = cursor->next;
-				cursor->next = temp;
-			}
-			else
-			{
-				cursor->next = temp;
-			}
-		}
+	printf("Enter data for el:");
+	scanf("%s", buf);
+	printf("\n");
+
+
+	temp = newSentence(buf);
+	if (!*sentence)
+	{
+		*sentence = temp;
+		*cursor = *sentence;
 	}
 	else
 	{
-		printf("List clear\n");
+		if ((*cursor)->next)
+		{
+			temp->next = (*cursor)->next;
+			(*cursor)->next = temp;
+		}
+		else
+		{
+			(*cursor)->next = temp;
+		}
+
 	}
 }
 
@@ -300,54 +295,61 @@ void	sentenceMenu(t_sentence	**sentence)
 	if(!startWorkWithStruct("Sentence"))
 		return;
 	flag = 1;
-	scanf("%d", &flag);
-	printf("\n");
-	system("cls");
 	cursor = *sentence;
-	switch (flag)
+	taked = NULL;
+	while (flag)
 	{
-	case 1:
-		cleanerSentence(sentence, cursor);
-		break;
-	case 2:
-		emptySentence(sentence);
-		break;
-	case 3:
-		cursorToStart(sentence, cursor);
-		break;
-	case 4:
-		cursorInStart(sentence, cursor);
-		break;
-	case 5:
-		cursorToEnd(sentence, cursor);
-		break;
-	case 6:
-		cursorInEnd(sentence, cursor);
-		break;
-	case 7:
-		nextEl(sentence, cursor);
-		break;
-	case 8:
-		viewNextEl(sentence, cursor);
-		break;
-	case 9:
-		deleteNextEl(sentence, cursor);
-		break;
-	case 10:
-		takeEl(sentence, cursor, &taked);
-		break;
-	case 11:
-		changeNextEl(sentence, cursor);
-		break;
-	case 12:
-		addEl(sentence, cursor);
-		break;
-	case 13:
+		printSentence(sentence, cursor);
+		printf("1. Cleaner\n2. Sentence clear?\n3. Cursor to start\n4. Cursor in start?\n5. Cursor to end\n6. Cursor in end?\n7. Skip el\n8. View Next el\n9. Delete next\n10. Take el\n11. Change next\n12. Add el\n13. Print\n0. Exit\n");
+		scanf("%d", &flag);
+		printf("\n");
+		system("cls");
 		
-		break;
-	case 14:
-		break;
-	default:
-		break;
+		switch (flag)
+		{
+		case 1:
+			cleanerSentence(sentence, cursor);
+			break;
+		case 2:
+			emptySentence(sentence);
+			break;
+		case 3:
+			cursorToStart(sentence, &cursor);
+			break;
+		case 4:
+			cursorInStart(sentence, cursor);
+			break;
+		case 5:
+			cursorToEnd(sentence, &cursor);
+			break;
+		case 6:
+			cursorInEnd(sentence, cursor);
+			break;
+		case 7:
+			nextEl(sentence, &cursor);
+			break;
+		case 8:
+			viewNextEl(sentence, cursor);
+			break;
+		case 9:
+			deleteNextEl(sentence, cursor);
+			break;
+		case 10:
+			takeEl(sentence, cursor, &taked);
+			break;
+		case 11:
+			changeNextEl(sentence, cursor);
+			break;
+		case 12:
+			addEl(sentence, &cursor);
+			break;
+		case 13:
+			printSentence(sentence, cursor);
+			break;
+		case 0:
+			break;
+		default:
+			break;
+		}
 	}
 }
