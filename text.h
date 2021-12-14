@@ -9,4 +9,7 @@ typedef struct s_text
 } t_text;
 
 void	textMenu(t_text	**text);
+void	cleanerText(t_text **text, t_text **cursor);
+void	printText(t_text **text, t_text *cursor);
+int		equalText(t_text *first, t_text *second);
 #endif

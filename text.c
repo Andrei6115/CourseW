@@ -1,9 +1,21 @@
 #include "text.h"
 int	equalText(t_text *first, t_text *second)
 {
+	while (first && second)
+	{
+		if (!equalSentence(first->sentence, second->sentence))
+		{
+			return (0);
+		}
+		first = first->next;
+		second = second->next;
+	}
+	if (first != second)
+		return (0);
+	return (1);
 }
 
-void	cleanerText(t_text **text, t_text *cursor)
+void	cleanerText(t_text **text, t_text **cursor)
 {
 	t_text	*tmp;
 	t_text	*list;
@@ -18,7 +30,7 @@ void	cleanerText(t_text **text, t_text *cursor)
 			list = tmp;
 		}
 		*text = NULL;
-		cursor = *text;
+		*cursor = *text;
 	}
 	else
 	{
@@ -26,7 +38,7 @@ void	cleanerText(t_text **text, t_text *cursor)
 	}
 }
 
-void	emptytext(t_text **text)
+static void	emptytext(t_text **text)
 {
 	if (*text == NULL)
 		printf("List clear\n");
@@ -34,7 +46,7 @@ void	emptytext(t_text **text)
 		printf("List not clear\n");
 }
 
-void	cursorToStart(t_text **text, t_text **cursor)
+static void	cursorToStart(t_text **text, t_text **cursor)
 {
 	if(*text)
 	{
@@ -46,7 +58,7 @@ void	cursorToStart(t_text **text, t_text **cursor)
 	}
 }
 
-void	cursorInStart(t_text **text, t_text *cursor)
+static void	cursorInStart(t_text **text, t_text *cursor)
 {
 	if(*text)
 	{
@@ -61,7 +73,7 @@ void	cursorInStart(t_text **text, t_text *cursor)
 	}
 }
 
-t_text	*lastWord(t_text *lst)
+static t_text	*lastSentence(t_text *lst)
 {
 	while (lst)
 	{
@@ -72,12 +84,12 @@ t_text	*lastWord(t_text *lst)
 	return (lst);
 }
 
-void cursorToEnd(t_text **text, t_text **cursor)
+static void cursorToEnd(t_text **text, t_text **cursor)
 {
 	
 	if (*text)
 	{
-		*cursor = lastWord(*text);
+		*cursor = lastSentence(*text);
 	}
 	else
 	{
@@ -85,7 +97,7 @@ void cursorToEnd(t_text **text, t_text **cursor)
 	}
 }
 
-void cursorInEnd(t_text **text, t_text *cursor)
+static void cursorInEnd(t_text **text, t_text *cursor)
 {
 	if (*text)
 	{
@@ -100,7 +112,7 @@ void cursorInEnd(t_text **text, t_text *cursor)
 	}
 }
 
-void	nextEl(t_text **text, t_text **cursor)
+static void	nextEl(t_text **text, t_text **cursor)
 {
 	if (*text)
 	{
@@ -115,7 +127,7 @@ void	nextEl(t_text **text, t_text **cursor)
 	}
 }
 
-void	viewNextEl(t_text **text, t_text *cursor)
+static void	viewNextEl(t_text **text, t_text *cursor)
 {
 	if (*text)
 	{
@@ -132,7 +144,7 @@ void	viewNextEl(t_text **text, t_text *cursor)
 	}
 }
 
-void	deleteNextEl(t_text **text, t_text *cursor)
+static void	deleteNextEl(t_text **text, t_text *cursor)
 {
 	t_text	*temp;
 
@@ -160,7 +172,7 @@ void	deleteNextEl(t_text **text, t_text *cursor)
 	}
 }
 
-void	takeEl(t_text **text, t_text *cursor, t_text **taked)
+static void	takeEl(t_text **text, t_text *cursor, t_text **taked)
 {
 	if ((*taked))
 	{
@@ -182,6 +194,7 @@ void	takeEl(t_text **text, t_text *cursor, t_text **taked)
 			}
 			printf("Taked el: ");
 			printSentence(&((*taked)->sentence), (*taked)->sentence);
+			printf("\n");
 		}
 		else
 		{
@@ -194,13 +207,13 @@ void	takeEl(t_text **text, t_text *cursor, t_text **taked)
 	}
 }
 
-void	changeNextEl(t_text **text, t_text *cursor)
+static void	changeNextEl(t_text **text, t_text *cursor)
 {
 	if (*text)
 	{
 		if (cursor->next)
 		{
-			sentenceMenu(&((*text)->sentence));
+			sentenceMenu(&(cursor->next->sentence));
 		}
 		else
 		{
@@ -214,7 +227,7 @@ void	changeNextEl(t_text **text, t_text *cursor)
 }
 
 
-void	addEl(t_text **text, t_text **cursor)
+static void	addEl(t_text **text, t_text **cursor)
 {
 	t_text	*temp;
 
@@ -271,7 +284,7 @@ void	printText(t_text **text, t_text *cursor)
 
 void	textMenu(t_text	**text)
 {
-	int			flag;
+	int		flag;
 	t_text	*cursor;
 	t_text	*taked;
 
@@ -287,14 +300,13 @@ void	textMenu(t_text	**text)
 		scanf("%d", &flag);
 		printf("\n");
 		system("cls");
-		
 		switch (flag)
 		{
 		case 1:
-			cleanerText(text, cursor);
+			cleanerText(text, &cursor);
 			break;
 		case 2:
-			
+			emptytext(text);
 			break;
 		case 3:
 			cursorToStart(text, &cursor);
@@ -332,6 +344,7 @@ void	textMenu(t_text	**text)
 		case 0:
 			break;
 		default:
+			printf("Input error\n");
 			break;
 		}
 	}

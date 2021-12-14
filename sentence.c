@@ -375,6 +375,7 @@ void	sentenceMenu(t_sentence	**sentence)
 		case 0:
 			break;
 		default:
+			printf("Input error\n");
 			break;
 		}
 	}
