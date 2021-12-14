@@ -4,7 +4,7 @@ void	cleanerPlenty(t_plenty **plenty)
 {
 	t_plenty	*tmp;
 	t_plenty	*list;
-
+	
 	if (*plenty)
 	{	
 		list = *plenty;
@@ -18,7 +18,7 @@ void	cleanerPlenty(t_plenty **plenty)
 	}
 	else
 	{
-		printf("List clear\n");
+		printf("Plenty clear\n");
 	}
 }
 
@@ -100,6 +100,7 @@ void	deleteEl(t_plenty **plenty)
 	if (!*plenty)
 	{
 		printf("Plenty empty\n");
+		return;
 	}
 	new = malloc(sizeof(t_plenty));
 	if (!new)
@@ -158,6 +159,7 @@ void	takeEl(t_plenty **plenty, t_plenty **taked)
 	if (!*plenty)
 	{
 		printf("Plenty empty\n");
+		return;
 	}
 	new = malloc(sizeof(t_plenty));
 	if (!new)
