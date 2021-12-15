@@ -6,6 +6,7 @@ typedef struct s_text
 {
 	struct s_sentence	*sentence;
 	struct s_text		*next;
+	struct s_text		*prev;
 } t_text;
 
 void	textMenu(t_text	**text);

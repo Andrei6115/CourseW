@@ -127,6 +127,21 @@ static void	nextEl(t_text **text, t_text **cursor)
 	}
 }
 
+static void	prevEl(t_text **text, t_text **cursor)
+{
+	if (*text)
+	{
+		if ((*cursor)->prev)
+			*cursor = (*cursor)->prev;
+		else
+			printf("No el\n");
+	}
+	else
+	{
+		printf("List clear\n");
+	}
+}
+
 static void	viewNextEl(t_text **text, t_text *cursor)
 {
 	if (*text)
@@ -134,6 +149,23 @@ static void	viewNextEl(t_text **text, t_text *cursor)
 		if (cursor->next)
 		{
 			printSentence(&((*text)->sentence), (*text)->sentence);
+		}
+		else
+			printf("No el\n");
+	}
+	else
+	{
+		printf("List clear\n");
+	}
+}
+
+static void	viewPrevEl(t_text **text, t_text *cursor)
+{
+	if (*text)
+	{
+		if (cursor->prev)
+		{
+			printSentence(&((*text)->prev->sentence), (*text)->prev->sentence);
 		}
 		else
 			printf("No el\n");
@@ -165,6 +197,7 @@ static void	deleteNextEl(t_text **text, t_text *cursor)
 			cursor->next = NULL;
 		}
 		cleanerSentence(&(temp->sentence), &(temp->sentence));
+		free(temp);
 	}
 	else
 	{
@@ -172,11 +205,42 @@ static void	deleteNextEl(t_text **text, t_text *cursor)
 	}
 }
 
-static void	takeEl(t_text **text, t_text *cursor, t_text **taked)
+static void	deletePrevEl(t_text **text, t_text *cursor)
+{
+	t_text	*temp;
+
+	if (*text)
+	{
+		if (!cursor->prev)
+		{
+			printf("No el\n");
+			return ;
+		}
+		temp = cursor->prev;
+		if (temp->prev)
+		{
+			cursor->prev = temp->prev;
+		}
+		else
+		{
+			cursor->prev = NULL;
+			*text = cursor;
+		}
+		cleanerSentence(&(temp->sentence), &(temp->sentence));
+		free(temp);
+	}
+	else
+	{
+		printf("List clear\n");
+	}
+}
+
+static void	takeNextEl(t_text **text, t_text *cursor, t_text **taked)
 {
 	if ((*taked))
 	{
 		cleanerSentence(&((*taked)->sentence), &((*taked)->sentence));
+		free(*taked);
 		(*taked) = NULL;
 	}
 	if (*text)
@@ -207,6 +271,43 @@ static void	takeEl(t_text **text, t_text *cursor, t_text **taked)
 	}
 }
 
+static void	takePrevEl(t_text **text, t_text *cursor, t_text **taked)
+{
+	if ((*taked))
+	{
+		cleanerSentence(&((*taked)->sentence), &((*taked)->sentence));
+		free(*taked);
+		(*taked) = NULL;
+	}
+	if (*text)
+	{
+		if (cursor->prev)
+		{
+			(*taked) = cursor->prev;
+			if ((*taked)->prev)
+			{
+				cursor->prev = (*taked)->prev;
+			}
+			else
+			{
+				cursor->prev = NULL;
+				*text = cursor;
+			}
+			printf("Taked el: ");
+			printSentence(&((*taked)->sentence), (*taked)->sentence);
+			printf("\n");
+		}
+		else
+		{
+			printf("No el\n");
+		}
+	}
+	else
+	{
+		printf("List clear");
+	}
+}
+
 static void	changeNextEl(t_text **text, t_text *cursor)
 {
 	if (*text)
@@ -218,6 +319,25 @@ static void	changeNextEl(t_text **text, t_text *cursor)
 		else
 		{
 			printf("no elem\n");
+		}text
+	}
+	else
+	{
+		printf("list clear\n");
+	}
+}
+
+static void	changePrevEl(t_text **text, t_text *cursor)
+{
+	if (*text)
+	{
+		if (cursor->prev)
+		{
+			sentenceMenu(&(cursor->prev->sentence));
+		}
+		else
+		{
+			printf("notext elem\n");
 		}
 	}
 	else
@@ -226,8 +346,7 @@ static void	changeNextEl(t_text **text, t_text *cursor)
 	}
 }
 
-
-static void	addEl(t_text **text, t_text **cursor)
+static void	addAfterCursor(t_text **text, t_text **cursor)
 {
 	t_text	*temp;
 
@@ -237,7 +356,8 @@ static void	addEl(t_text **text, t_text **cursor)
 		printf("MEM ERROR\n");
 		exit(1);
 	}
-	temp->next = NULL;
+	temp->next = NULL;text
+	temp->prev = NULL;
 	temp->sentence = NULL;
 	sentenceMenu(&(temp->sentence));
 	if (!*text)
@@ -250,13 +370,53 @@ static void	addEl(t_text **text, t_text **cursor)
 		if ((*cursor)->next)
 		{
 			temp->next = (*cursor)->next;
+			temp->next->prev = temp;
 			(*cursor)->next = temp;
+			temp->prev = (*cursor);
 		}
 		else
 		{
 			(*cursor)->next = temp;
+			temp->prev = (*cursor);
 		}
 
+	}
+}
+
+static void	addBeforeCursor(t_text **text, t_text **cursor)
+{
+	t_text	*temp;
+
+	temp = malloc(sizeof(t_text));
+	if (!temp)
+	{
+		printf("MEM ERROR\n");
+		exit(1);
+	}
+	temp->next = NULL;
+	temp->prev = NULL;
+	temp->sentence = NULL;
+	sentenceMenu(&(temp->sentence));
+	if (!*text)
+	{
+		*text = temp;
+		*cursor = *text;
+	}
+	else
+	{
+		if ((*cursor)->prev)
+		{
+			temp->prev = (*cursor)->prev;
+			temp->prev->next = temp;
+			(*cursor)->prev = temp;
+			temp->next = (*cursor);
+		}
+		else
+		{
+			(*cursor)->prev = temp;
+			temp->next = (*cursor);
+			*text = temp;
+		}
 	}
 }
 
@@ -271,7 +431,7 @@ void	printText(t_text **text, t_text *cursor)
 		return;
 	}
 	while (list)
-	{
+	{text
 		if (list == cursor)
 			printf("=>\t");
 		else
@@ -296,7 +456,7 @@ void	textMenu(t_text	**text)
 	while (flag)
 	{
 		printText(text, cursor);
-		printf("1. Cleaner\n2. Text clear?\n3. Cursor to start\n4. Cursor in start?\n5. Cursor to end\n6. Cursor in end?\n7. Skip el\n8. View Next el\n9. Delete next\n10. Take el\n11. Change next\n12. Add el\n13. Print\n0. Exit\n");
+		printf("1. Cleaner\n2. Text clear?\n3. Cursor to start\n4. Cursor in start?\n5. Cursor to end\n6. Cursor in end?\n7. Next el\n8. Prev el\n9. View next el\n10. View prev el\n11. Delete next el\n12. Delete prev el\n13. Take next el\n14. Take prev el\n15. Change next\n16. Change prev\n17. Add after cursor\n18. Add before cursor\n19. Print\n0. Exit\n");
 		scanf("%d", &flag);
 		printf("\n");
 		system("cls");
@@ -324,22 +484,40 @@ void	textMenu(t_text	**text)
 			nextEl(text, &cursor);
 			break;
 		case 8:
-			viewNextEl(text, cursor);
+			prevEl(text, &cursor);
 			break;
 		case 9:
-			deleteNextEl(text, cursor);
+			viewNextEl(text, cursor);
 			break;
 		case 10:
-			takeEl(text, cursor, &taked);
+			viewPrevEl(text, cursor);
 			break;
 		case 11:
-			changeNextEl(text, cursor);
+			deleteNextEl(text, cursor);
 			break;
 		case 12:
-			addEl(text, &cursor);
+			deletePrevEl(text, cursor);
 			break;
 		case 13:
-		printText(text, cursor);
+			takeNextEl(text, cursor, &taked);
+			break;
+		case 14:
+			takePrevEl(text, cursor, &taked);
+			break;
+		case 15:
+			changeNextEl(text, cursor);
+			break;
+		case 16:
+			changePrevEl(text, cursor);
+			break;
+		case 17:
+			addAfterCursor(text, &cursor);
+			break;
+		case 18:
+			addBeforeCursor(text, &cursor);
+			break;
+		case 19:
+			printText(text, cursor);
 			break;
 		case 0:
 			break;
