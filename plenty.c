@@ -65,7 +65,6 @@ void addEl(t_plenty **plenty)
 		exit(1);
 	}
 	new->next = NULL;
-	new->prev = NULL;
 	new->text = NULL;
 	textMenu(&(new->text));
 	temp = (*plenty);
@@ -88,13 +87,13 @@ void addEl(t_plenty **plenty)
 	{
 		last = lastText(*plenty);
 		last->next = new;
-		new->prev = last;
 	}
 }
 
 void	deleteEl(t_plenty **plenty)
 {
 	t_plenty	*temp;
+	t_plenty	*del;
 	t_plenty	*new;
 
 	if (!*plenty)
@@ -109,42 +108,28 @@ void	deleteEl(t_plenty **plenty)
 		exit(1);
 	}
 	new->next = NULL;
-	new->prev = NULL;
 	new->text = NULL;
 	textMenu(&(new->text));
 	temp = (*plenty);
-	while (temp)
+	if (equalPlenty(temp, new))
 	{
-		if (equalPlenty(temp, new))
+		cleanerText(&(new->text), &(new->text));
+		free (new);
+		*plenty = temp->next;
+		cleanerText(&(temp->text), &(temp->text));
+		free (temp);
+		return;
+	}
+	while (temp->next)
+	{
+		if (equalPlenty(temp->next, new))
 		{
 			cleanerText(&(new->text), &(new->text));
 			free (new);
-			if (temp->next && temp->prev)
-			{
-				temp->prev->next = temp->next;
-				temp->next->prev = temp->prev;
-				cleanerText(&(temp->text), &(temp->text));
-				free (temp);
-			}
-			else if (temp->next)
-			{
-				*plenty = temp->next;
-				temp->next->prev = NULL;
-				cleanerText(&(temp->text), &(temp->text));
-				free (temp);
-			}
-			else if (temp->prev)
-			{
-				temp->prev->next = NULL;
-				cleanerText(&(temp->text), &(temp->text));
-				free (temp);
-			}
-			else
-			{
-				cleanerText(&(temp->text), &(temp->text));
-				free (temp);
-				*plenty = NULL;
-			}
+			del = temp->next;
+			temp->next = temp->next->next;
+			cleanerText(&(del->text), &(del->text));
+			free (del);
 			return;
 		}
 		temp = temp->next;
@@ -168,14 +153,27 @@ void	takeEl(t_plenty **plenty, t_plenty **taked)
 		exit(1);
 	}
 	new->next = NULL;
-	new->prev = NULL;
 	new->text = NULL;
 	textMenu(&(new->text));
 	temp = (*plenty);
-	
-	while (temp)
+	if (equalPlenty(temp, new))
 	{
-		if (equalPlenty(temp, new))
+		if (*taked)
+		{
+
+			cleanerText(&((*taked)->text), &((*taked)->text));
+			free (*taked);
+			*taked = NULL;
+		}
+		cleanerText(&(new->text), &(new->text));
+		free (new);
+		*plenty = temp->next;
+		*taked = temp;
+		return;
+	}
+	while (temp->next)
+	{
+		if (equalPlenty(temp->next, new))
 		{
 			if (*taked)
 			{
@@ -186,28 +184,8 @@ void	takeEl(t_plenty **plenty, t_plenty **taked)
 			}
 			cleanerText(&(new->text), &(new->text));
 			free (new);
-			if (temp->next && temp->prev)
-			{
-				temp->prev->next = temp->next;
-				temp->next->prev = temp->prev;
-				*taked = temp;
-			}
-			else if (temp->next)
-			{
-				*plenty = temp->next;
-				temp->next->prev = NULL;
-				*taked = temp;
-			}
-			else if (temp->prev)
-			{
-				temp->prev->next = NULL;
-				*taked = temp;
-			}
-			else
-			{
-				*taked = temp;
-				*plenty = NULL;
-			}
+			*taked = temp->next;
+			temp->next = temp->next->next;
 			return;
 		}
 		temp = temp->next;
@@ -226,7 +204,6 @@ void searchEl(t_plenty **plenty)
 		exit(1);
 	}
 	new->next = NULL;
-	new->prev = NULL;
 	new->text = NULL;
 	textMenu(&(new->text));
 	temp = (*plenty);
