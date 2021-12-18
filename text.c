@@ -319,7 +319,7 @@ static void	changeNextEl(t_text **text, t_text *cursor)
 		else
 		{
 			printf("no elem\n");
-		}text
+		}
 	}
 	else
 	{
@@ -356,7 +356,7 @@ static void	addAfterCursor(t_text **text, t_text **cursor)
 		printf("MEM ERROR\n");
 		exit(1);
 	}
-	temp->next = NULL;text
+	temp->next = NULL;
 	temp->prev = NULL;
 	temp->sentence = NULL;
 	sentenceMenu(&(temp->sentence));
@@ -431,7 +431,7 @@ void	printText(t_text **text, t_text *cursor)
 		return;
 	}
 	while (list)
-	{text
+	{
 		if (list == cursor)
 			printf("=>\t");
 		else
