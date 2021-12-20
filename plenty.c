@@ -197,6 +197,11 @@ void searchEl(t_plenty **plenty)
 	t_plenty	*new;
 	t_plenty	*temp;
 
+	if (!*plenty)
+	{
+		printf("Plenty empty\n");
+		return;
+	}
 	new = malloc(sizeof(t_plenty));
 	if (!new)
 	{

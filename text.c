@@ -191,6 +191,7 @@ static void	deleteNextEl(t_text **text, t_text *cursor)
 		if (temp->next)
 		{
 			cursor->next = temp->next;
+			temp->next->prev = cursor;
 		}
 		else
 		{
@@ -209,7 +210,7 @@ static void	deletePrevEl(t_text **text, t_text *cursor)
 {
 	t_text	*temp;
 
-	if (*text)
+	if (cursor)
 	{
 		if (!cursor->prev)
 		{
@@ -220,6 +221,7 @@ static void	deletePrevEl(t_text **text, t_text *cursor)
 		if (temp->prev)
 		{
 			cursor->prev = temp->prev;
+			temp->prev->next = cursor;
 		}
 		else
 		{
@@ -251,6 +253,7 @@ static void	takeNextEl(t_text **text, t_text *cursor, t_text **taked)
 			if ((*taked)->next)
 			{
 				cursor->next = (*taked)->next;
+				(*taked)->next->prev = cursor;
 			}
 			else
 			{
@@ -279,7 +282,7 @@ static void	takePrevEl(t_text **text, t_text *cursor, t_text **taked)
 		free(*taked);
 		(*taked) = NULL;
 	}
-	if (*text)
+	if (cursor)
 	{
 		if (cursor->prev)
 		{
@@ -287,6 +290,7 @@ static void	takePrevEl(t_text **text, t_text *cursor, t_text **taked)
 			if ((*taked)->prev)
 			{
 				cursor->prev = (*taked)->prev;
+				(*taked)->prev->next = cursor;
 			}
 			else
 			{
