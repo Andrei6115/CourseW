@@ -169,6 +169,9 @@ void	takeEl(t_plenty **plenty, t_plenty **taked)
 		free (new);
 		*plenty = temp->next;
 		*taked = temp;
+		printf("Taked El:");
+		printText(&(*taked)->text, (*taked)->text);
+		printf("\n");
 		return;
 	}
 	while (temp->next)
@@ -185,6 +188,9 @@ void	takeEl(t_plenty **plenty, t_plenty **taked)
 			cleanerText(&(new->text), &(new->text));
 			free (new);
 			*taked = temp->next;
+			printf("Taked El:\n");
+			printText(&(*taked)->text, (*taked)->text);
+			printf("\n");
 			temp->next = temp->next->next;
 			return;
 		}
